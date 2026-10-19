@@ -5,5 +5,8 @@
     "nodemailer": "^10.0.10",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
+  },
+  "allowScripts": {
+    "sqlite3@5.1.7": true
   }
 }
