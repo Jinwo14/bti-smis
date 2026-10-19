@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ya Msajili (Registrar) - BTI SMIS</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; color: #333; padding: 20px; }
+        header { background-color: #1e3a8a; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 22px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .card h2 { margin-bottom: 15px; color: #1e3a8a; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; font-size: 18px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        button { background-color: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #1d4ed8; }
+        .btn-approve { background-color: #16a34a; margin-right: 5px; }
+        .btn-approve:hover { background-color: #15803d; }
+        .btn-reject { background-color: #dc2626; }
+        .btn-reject:hover { background-color: #b91c1c; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        table th { background-color: #f8fafc; color: #475569; }
+        .status-pending { color: #d97706; font-weight: bold; background: #fef3c7; padding: 3px 8px; border-radius: 4px; }
+        .status-approved { color: #16a34a; font-weight: bold; background: #dcfce7; padding: 3px 8px; border-radius: 4px; }
+        .status-rejected { color: #dc2626; font-weight: bold; background: #fee2e2; padding: 3px 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>BTI SMIS - Admission Registrar Dashboard</h1>
+        <button onclick="logout()" style="background-color: #ef4444;">Orodoka (Logout)</button>
+    </header>
+
+    <!-- 1. FOMU YA KUSAJILI MWANAFUNZI MPYA -->
+    <div class="card">
+        <h2>1. Usajili wa Mwanafunzi Mpya</h2>
+        <form id="addStudentForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Jina Kamili:</label>
+                    <input type="text" id="studentName" required placeholder="Mf. John Joseph">
+                </div>
+                <div class="form-group">
+                    <label>Form 4 Index No (Username):</label>
+                    <input type="text" id="studentIndexNo" placeholder="Mf. S0101/0001/2020">
+                </div>
+                <div class="form-group">
+                    <label>Email Halisi:</label>
+                    <input type="email" id="studentEmail" required placeholder="mwanafunzi@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>Password ya Kuanzia:</label>
+                    <input type="text" id="studentPassword" value="123456" required>
+                </div>
+                <div class="form-group">
+                    <label>Kozi (Course):</label>
+                    <select id="studentCourse" required>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Accounting">Accounting</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NTA Level:</label>
+                    <select id="studentNtaLevel" required>
+                        <option value="NTA Level 4">NTA Level 4</option>
+                        <option value="NTA Level 5">NTA Level 5</option>
+                        <option value="NTA Level 6">NTA Level 6</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" style="margin-top: 10px;">Sajili Mwanafunzi</button>
+        </form>
+    </div>
+
+    <!-- 2. SIMAMIA MAOMBI YA HOSTEL -->
+    <div class="card">
+        <h2>2. Usimamizi wa Maombi ya Hostel (Boys & Girls)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Jina la Mwanafunzi</th>
+                    <th>Jinsia</th>
+                    <th>Hostel Aliyochagua</th>
+                    <th>Kielelezo cha Malipo</th>
+                    <th>Hali (Status)</th>
+                    <th>Hatua (Action)</th>
+                </tr>
+            </thead>
+            <tbody id="hostelTableBody">
+                <tr><td colspan="6">Inapakia maombi ya hostel...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 3. SIMAMIA MAOMBI YA UDAHILI (TAMISEMI, FORM 6 & LEVEL UPGRADES) -->
+    <div class="card">
+        <h2>3. Maombi ya Udahili (TAMISEMI, Form 6 & Level Upgrades)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Jina la Mwombaji</th>
+                    <th>Index No / Reg No</th>
+                    <th>Aina ya Ombi</th>
+                    <th>Email</th>
+                    <th>Hali (Status)</th>
+                    <th>Hatua (Action)</th>
+                </tr>
+            </thead>
+            <tbody id="admissionsTableBody">
+                <tr><td colspan="6">Inapakia maombi ya udahili...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Usajili wa Mwanafunzi
+    document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name: document.getElementById('studentName').value,
+            secondary_index_no: document.getElementById('studentIndexNo').value,
+            email: document.getElementById('studentEmail').value,
+            password: document.getElementById('studentPassword').value,
+            course: document.getElementById('studentCourse').value,
+            nta_level: document.getElementById('studentNtaLevel').value
+        };
+
+        try {
+            const res = await fetch('/api/registrar/add-student', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+                alert(`✅ Mwanafunzi amesajiliwa kikamilifu!\nUsername/RegNo: ${result.regNo}`);
+                document.getElementById('addStudentForm').reset();
+            } else {
+                alert(`❌ Imefeli: ${result.message}`);
+            }
+        } catch (err) {
+            alert('❌ Kutokea kosa wakati wa kuunganisha na server.');
+        }
+    });
+
+    // Leta Maombi ya Hostel
+    async function loadHostelApplications() {
+        try {
+            const res = await fetch('/api/registrar/hostel-applications');
+            const apps = await res.json();
+            const tbody = document.getElementById('hostelTableBody');
+            tbody.innerHTML = '';
+
+            if (apps.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Hakuna maombi ya hostel kwa sasa.</td></tr>';
+                return;
+            }
+
+            apps.forEach(app => {
+                const statusClass = app.status === 'APPROVED' ? 'status-approved' : app.status === 'REJECTED' ? 'status-rejected' : 'status-pending';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${app.student_name}</strong></td>
+                        <td>${app.gender}</td>
+                        <td><strong>${app.hostel_name}</strong></td>
+                        <td>${app.payment_proof}</td>
+                        <td><span class="${statusClass}">${app.status}</span></td>
+                        <td>
+                            ${app.status === 'PENDING' ? `
+                                <button class="btn-approve" onclick="updateHostelStatus(${app.id}, 'APPROVED')">Kubali</button>
+                                <button class="btn-reject" onclick="updateHostelStatus(${app.id}, 'REJECTED')">Kataa</button>
+                            ` : 'Imekamilika'}
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Badilisha Status ya Hostel
+    async function updateHostelStatus(id, status) {
+        const res = await fetch('/api/registrar/hostel-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        });
+        const result = await res.json();
+        alert(result.message);
+        loadHostelApplications();
+    }
+
+    // Leta Maombi ya Udahili
+    async function loadAdmissions() {
+        try {
+            const res = await fetch('/api/registrar/admissions');
+            const list = await res.json();
+            const tbody = document.getElementById('admissionsTableBody');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Hakuna maombi ya udahili kwa sasa.</td></tr>';
+                return;
+            }
+
+            list.forEach(item => {
+                const statusClass = item.status === 'APPROVED' ? 'status-approved' : item.status === 'REJECTED' ? 'status-rejected' : 'status-pending';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.student_name}</strong></td>
+                        <td>${item.index_no}</td>
+                        <td><strong>${item.type}</strong></td>
+                        <td>${item.email}</td>
+                        <td><span class="${statusClass}">${item.status}</span></td>
+                        <td>
+                            ${item.status === 'PENDING' ? `
+                                <button class="btn-approve" onclick="updateAdmissionStatus(${item.id}, 'APPROVED')">Thibitisha</button>
+                                <button class="btn-reject" onclick="updateAdmissionStatus(${item.id}, 'REJECTED')">Kataa</button>
+                            ` : 'Imekamilika'}
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Badilisha Status ya Udahili
+    async function updateAdmissionStatus(id, status) {
+        const res = await fetch('/api/registrar/admission-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status })
+        });
+        const result = await res.json();
+        alert(result.message);
+        loadAdmissions();
+    }
+
+    function logout() {
+        window.location.href = 'index.html';
+    }
+
+    // Pakia data pindi ukurasa unapofunguka
+    window.onload = () => {
+        loadHostelApplications();
+        loadAdmissions();
+    };
+</script>
+
+</body>
+</html>
