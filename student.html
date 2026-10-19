@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTI SMIS - Student Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 font-sans antialiased">
+
+    <!-- MOBILE HEADER -->
+    <header class="md:hidden bg-slate-950 text-white p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="font-bold text-lg flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-blue-500"></i> BTI PORTAL
+        </div>
+        <button id="mobileMenuBtn" onclick="toggleSidebar()" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+    </header>
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-slate-300 flex flex-col justify-between transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
+            <div>
+                <div class="hidden md:flex p-5 bg-slate-950 text-white font-bold text-xl items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-blue-500"></i> BTI PORTAL
+                </div>
+                
+                <nav class="p-4 space-y-1 text-sm">
+                    <button onclick="showSection('overview')" id="nav-overview" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-chart-line w-5 text-blue-400"></i> Dashibodi Kuu
+                    </button>
+                    <button onclick="showSection('academics')" id="nav-academics" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-book-open w-5 text-emerald-400"></i> Academic & Timetables
+                    </button>
+                    <button onclick="showSection('results')" id="nav-results" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-square-poll-vertical w-5 text-amber-400"></i> Assessment & Results
+                    </button>
+                    <button onclick="showSection('finance')" id="nav-finance" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-wallet w-5 text-purple-400"></i> Student Fees
+                    </button>
+                    <button onclick="showSection('requests')" id="nav-requests" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-paper-plane w-5 text-rose-400"></i> Requests & Services
+                    </button>
+                    <button onclick="showSection('governance')" id="nav-governance" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded hover:bg-slate-800 hover:text-white transition font-medium text-left">
+                        <i class="fa-solid fa-shield-halved w-5 text-cyan-400"></i> Rules & Settings
+                    </button>
+                </nav>
+            </div>
+            
+            <div class="p-4 border-t border-slate-800">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white py-2 rounded text-sm font-semibold transition">
+                    <i class="fa-solid fa-right-from-bracket"></i> Ondoka (Logout)
+                </button>
+            </div>
+        </aside>
+
+        <!-- OVERLAY FOR MOBILE SIDEBAR -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-30 hidden md:hidden"></div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            
+            <!-- HEADER -->
+            <header class="bg-white p-5 rounded-xl shadow-sm border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div>
+                    <h1 class="text-xl font-bold text-slate-800" id="stdName">Mwanafunzi</h1>
+                    <p class="text-xs text-slate-500 font-mono mt-0.5" id="stdIndex">Form 4 Index No: -</p>
+                </div>
+                <div class="text-left sm:text-right">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold uppercase" id="stdLevel">NTA Level 4</span>
+                    <p class="text-xs text-emerald-600 font-semibold mt-1" id="stdCourse">Information Technology</p>
+                </div>
+            </header>
+
+            <!-- SECTION 1: OVERVIEW DASHBOARD -->
+            <section id="overview" class="content-section space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div onclick="showSection('academics')" class="bg-white p-5 rounded-xl border shadow-sm cursor-pointer hover:border-blue-500 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-500 uppercase">Timetable</span>
+                            <i class="fa-solid fa-calendar-days text-blue-500 text-lg group-hover:scale-110 transition"></i>
+                        </div>
+                        <p class="text-lg font-bold text-slate-800 mt-2">Class & Exam</p>
+                        <p class="text-xs text-blue-600 mt-1 font-medium flex items-center gap-1">Tazama Ratiba <i class="fa-solid fa-arrow-right text-[10px]"></i></p>
+                    </div>
+
+                    <div onclick="showSection('finance')" class="bg-white p-5 rounded-xl border shadow-sm cursor-pointer hover:border-purple-500 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-500 uppercase">Student Fees</span>
+                            <i class="fa-solid fa-file-invoice-dollar text-purple-500 text-lg group-hover:scale-110 transition"></i>
+                        </div>
+                        <p class="text-lg font-bold text-slate-800 mt-2">Hali ya Ada</p>
+                        <p class="text-xs text-emerald-600 mt-1 font-medium">Imelipwa (Paid)</p>
+                    </div>
+
+                    <div onclick="showSection('results')" class="bg-white p-5 rounded-xl border shadow-sm cursor-pointer hover:border-amber-500 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-500 uppercase">Assessment</span>
+                            <i class="fa-solid fa-chart-bar text-amber-500 text-lg group-hover:scale-110 transition"></i>
+                        </div>
+                        <p class="text-lg font-bold text-slate-800 mt-2">Matokeo Yako</p>
+                        <p class="text-xs text-amber-600 mt-1 font-medium flex items-center gap-1">Kagua Matokeo <i class="fa-solid fa-arrow-right text-[10px]"></i></p>
+                    </div>
+
+                    <div onclick="showSection('requests')" class="bg-white p-5 rounded-xl border shadow-sm cursor-pointer hover:border-rose-500 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-500 uppercase">Services</span>
+                            <i class="fa-solid fa-id-card text-rose-500 text-lg group-hover:scale-110 transition"></i>
+                        </div>
+                        <p class="text-lg font-bold text-slate-800 mt-2">Request ID / Hostel</p>
+                        <p class="text-xs text-rose-600 mt-1 font-medium flex items-center gap-1">Tuma Maombi <i class="fa-solid fa-arrow-right text-[10px]"></i></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: CLASS & EXAM TIMETABLE -->
+            <section id="academics" class="content-section hidden space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-2">Academic Timetables</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Class Timetable -->
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-blue-600"></i> Class Timetable
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Ratiba ya vipindi vyako vya darasani wiki hii.</p>
+                        <div class="border rounded text-sm divide-y overflow-hidden">
+                            <div class="p-3 flex justify-between bg-slate-50 font-semibold">
+                                <span>Ijumaa (08:00 AM - 10:00 AM)</span>
+                                <span class="text-blue-700">Web Development</span>
+                            </div>
+                            <div class="p-3 flex justify-between">
+                                <span>Jumatatu (10:30 AM - 12:30 PM)</span>
+                                <span class="text-blue-700">Database Systems</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Timetable -->
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-ruler text-rose-600"></i> Exam Timetable
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Ratiba ya Mitihani ya Mwisho wa Muhula (End of Semester Exam).</p>
+                        <div class="border rounded text-sm divide-y overflow-hidden">
+                            <div class="p-3 flex justify-between bg-slate-50 font-semibold">
+                                <span>15/10/2026 (09:00 AM)</span>
+                                <span class="text-rose-700">CS101 - Web Dev Exam</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: ASSESSMENT PLAN & RESULTS -->
+            <section id="results" class="content-section hidden space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-2">Assessment Plan & Results</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Assessment Plan -->
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-3">Mpango wa Tathmini (Assessment Plan)</h3>
+                        <ul class="text-sm space-y-2 text-slate-600">
+                            <li class="flex justify-between border-b pb-1"><span>Continuous Assessment (CA):</span> <strong>40%</strong></li>
+                            <li class="flex justify-between border-b pb-1"><span>End of Semester Exam (SE):</span> <strong>60%</strong></li>
+                            <li class="flex justify-between font-bold text-slate-800 pt-1"><span>Jumla (Total):</span> <span>100%</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-3">Matokeo ya Masomo (Semester Results)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 text-xs uppercase text-slate-600 border-b">
+                                        <th class="p-2">Code</th>
+                                        <th class="p-2">CA (40)</th>
+                                        <th class="p-2">SE (60)</th>
+                                        <th class="p-2">Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b hover:bg-slate-50">
+                                        <td class="p-2 font-mono">CS101</td>
+                                        <td class="p-2">32</td>
+                                        <td class="p-2">48</td>
+                                        <td class="p-2 font-bold text-emerald-600">A</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: STUDENT FEES -->
+            <section id="finance" class="content-section hidden space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-2">Student Fees & Payments</h2>
+                
+                <div class="bg-white p-6 rounded-xl border shadow-sm space-y-4 max-w-2xl">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-b pb-4 text-center sm:text-left">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Ada Yote</p>
+                            <p class="text-lg font-bold text-slate-800 mt-1">TZS 900,000</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Kilicholipwa</p>
+                            <p class="text-lg font-bold text-emerald-600 mt-1">TZS 900,000</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Salio (Balance)</p>
+                            <p class="text-lg font-bold text-slate-400 mt-1">TZS 0</p>
+                        </div>
+                    </div>
+                    <button onclick="alert('Inapakua Risiti...')" class="bg-blue-600 text-white text-xs font-bold px-4 py-2.5 rounded hover:bg-blue-700 transition flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <i class="fa-solid fa-download"></i> Pakua Risiti ya Ada (Download Receipt)
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 5: REQUESTS & APPLICATIONS -->
+            <section id="requests" class="content-section hidden space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-2">Maombi na Huduma za Wanafunzi (Student Requests)</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-id-card text-blue-600 mr-2"></i> Request Student ID</h3>
+                            <p class="text-xs text-slate-500 mb-4">Omba Kitambulisho kipya au mbadala cha Mwanafunzi.</p>
+                        </div>
+                        <button onclick="alert('Ombi la Kitambulisho limetumwa kwa Msajili!')" class="w-full bg-slate-900 text-white text-xs py-2 rounded font-semibold hover:bg-slate-800 transition">Tuma Ombi</button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-file-lines text-amber-600 mr-2"></i> Request Transcript</h3>
+                            <p class="text-xs text-slate-500 mb-4">Omba Nakala Rasmi ya Matokeo (Official Transcript).</p>
+                        </div>
+                        <button onclick="alert('Ombi la Transcript limetumwa Examination Office!')" class="w-full bg-slate-900 text-white text-xs py-2 rounded font-semibold hover:bg-slate-800 transition">Tuma Ombi</button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-bed text-purple-600 mr-2"></i> Request Hostel</h3>
+                            <p class="text-xs text-slate-500 mb-4">Omba Nafasi ya Bweni/Hostel za Chuo.</p>
+                        </div>
+                        <button onclick="alert('Maombi ya Hostel yamepokelewa!')" class="w-full bg-slate-900 text-white text-xs py-2 rounded font-semibold hover:bg-slate-800 transition">Omba Hostel</button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-circle-pause text-rose-600 mr-2"></i> Postpone Studies</h3>
+                            <p class="text-xs text-slate-500 mb-4">Omba Kuhamisha/Kusimamisha Masomo kwa Muda.</p>
+                        </div>
+                        <button onclick="alert('Fomu ya Postpone Studies imefunguliwa.')" class="w-full bg-rose-600 text-white text-xs py-2 rounded font-semibold hover:bg-rose-700 transition">Omba Kusitisha</button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-circle-play text-emerald-600 mr-2"></i> Resume Studies</h3>
+                            <p class="text-xs text-slate-500 mb-4">Omba Kurudi Masomoni baada ya Kusitisha.</p>
+                        </div>
+                        <button onclick="alert('Maombi ya Kurudi Masomoni yametumwa!')" class="w-full bg-emerald-600 text-white text-xs py-2 rounded font-semibold hover:bg-emerald-700 transition">Omba Kurudi</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: GOVERNANCE, RULES & SECURITY -->
+            <section id="governance" class="content-section hidden space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-2">Rules, Academic Advisor & Security</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-user-tie text-blue-600 mr-2"></i> Academic Advisor</h3>
+                        <p class="text-xs text-slate-500">Mshauri wako wa Masomo:</p>
+                        <p class="font-bold text-slate-800 text-sm mt-1">Dr. Joseph Mndeme</p>
+                        <a href="mailto:advisor.it@bti.ac.tz" class="text-xs text-blue-600 underline mt-1 block">advisor.it@bti.ac.tz</a>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-book text-amber-600 mr-2"></i> Manuals & Rules</h3>
+                            <p class="text-xs text-slate-500 mb-3">Mwongozo wa Nidhamu na Kanuni za Chuo.</p>
+                        </div>
+                        <button onclick="alert('Inapakua Mwongozo wa Kanuni za Chuo (PDF)...')" class="text-xs bg-slate-100 text-slate-700 py-2 px-3 rounded font-semibold hover:bg-slate-200 border w-full">Soma Kanuni na Penalty</button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-key text-rose-600 mr-2"></i> Badili Password</h3>
+                        <form onsubmit="handlePasswordChange(event)" class="space-y-2">
+                            <input type="password" placeholder="Password ya Sasa" required class="w-full border text-xs p-2 rounded focus:outline-none focus:border-blue-500">
+                            <input type="password" placeholder="Password Mpya" required class="w-full border text-xs p-2 rounded focus:outline-none focus:border-blue-500">
+                            <button type="submit" class="w-full bg-slate-900 text-white text-xs py-2 rounded font-bold hover:bg-slate-800 transition">Badili Password</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Check User Session
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'STUDENT') {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('stdName').innerText = user.name || 'Mwanafunzi';
+            document.getElementById('stdIndex').innerText = `Form 4 Index No: ${user.username || '-'}`;
+            document.getElementById('stdLevel').innerText = user.nta_level || 'NTA Level 4';
+            document.getElementById('stdCourse').innerText = user.course || 'Information Technology';
+        }
+
+        // Section Switcher Logic
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+
+            // Show current section
+            const activeSection = document.getElementById(sectionId);
+            if(activeSection) {
+                activeSection.classList.remove('hidden');
+            }
+
+            // Active State Indicator for Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('hover:bg-slate-800', 'hover:text-white');
+            });
+
+            const activeNav = document.getElementById(`nav-${sectionId}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-blue-600', 'text-white');
+                activeNav.classList.remove('hover:bg-slate-800');
+            }
+
+            // Close mobile sidebar on click
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+        }
+
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Password Form Submission
+        function handlePasswordChange(e) {
+            e.preventDefault();
+            alert('Password imebadilishwa kikamilifu!');
+            e.target.reset();
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Initialize active tab on load
+        showSection('overview');
+    </script>
+</body>
+</html>
