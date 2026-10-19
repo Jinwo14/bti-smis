@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <title>BTI SMIS - Omba Kujiunga (NACTEVET Standard)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-lg w-full">
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-1">Fomu ya Maombi ya Chuo</h2>
+        <p class="text-gray-500 text-xs text-center mb-6">Ingiza Form 4 Index Number yako kulingana na matokeo ya NECTA</p>
+        
+        <form id="regForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Form 4 Candidate / Index Number</label>
+                <input type="text" id="form4Index" placeholder="mfano: S0101/0001/2023" required class="w-full border p-2.5 rounded mt-1 text-sm outline-none focus:ring-2 focus:ring-blue-600 uppercase">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Jina Kamili (Kama lilivyo NECTA)</label>
+                <input type="text" id="fullName" required class="w-full border p-2.5 rounded mt-1 text-sm outline-none focus:ring-2 focus:ring-blue-600">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Barua Pepe (Email)</label>
+                <input type="email" id="email" required class="w-full border p-2.5 rounded mt-1 text-sm outline-none focus:ring-2 focus:ring-blue-600">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Kozi Unayoomba</label>
+                    <select id="course" class="w-full border p-2.5 rounded mt-1 text-sm bg-white outline-none">
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Accounting & Finance">Accounting & Finance</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Kiwango (NTA Level)</label>
+                    <select id="ntaLevel" class="w-full border p-2.5 rounded mt-1 text-sm bg-white outline-none">
+                        <option value="NTA Level 4">NTA Level 4 (Basic Cert)</option>
+                        <option value="NTA Level 5">NTA Level 5 (Diploma 1)</option>
+                        <option value="NTA Level 6">NTA Level 6 (Diploma 2)</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Neno la Siri (Password)</label>
+                <input type="password" id="password" required class="w-full border p-2.5 rounded mt-1 text-sm outline-none focus:ring-2 focus:ring-blue-600">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Tuma Maombi</button>
+        </form>
+
+        <p id="errMsg" class="mt-3 text-center text-sm text-red-600 font-semibold"></p>
+
+        <div id="resultBox" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+            <p class="text-green-800 font-bold" id="resMsg"></p>
+            <p class="text-sm text-gray-600 mt-2">Utatumia Form 4 Index Number yako Kuingia Mfumoni:</p>
+            <p id="indexNoText" class="text-xl font-extrabold text-blue-900 my-1 font-mono"></p>
+            <a href="index.html" class="inline-block mt-4 text-xs bg-blue-600 text-white px-4 py-2 rounded font-bold hover:bg-blue-700">Nenda Kuingia (Login)</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form4Index = document.getElementById('form4Index').value.trim();
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const course = document.getElementById('course').value;
+            const ntaLevel = document.getElementById('ntaLevel').value;
+            const password = document.getElementById('password').value;
+
+            document.getElementById('errMsg').innerText = '';
+
+            try {
+                const res = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ form4Index, fullName, email, course, ntaLevel, password })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('regForm').classList.add('hidden');
+                    document.getElementById('resultBox').classList.remove('hidden');
+                    document.getElementById('resMsg').innerText = data.message;
+                    document.getElementById('indexNoText').innerText = data.indexNo;
+                } else {
+                    document.getElementById('errMsg').innerText = data.message;
+                }
+            } catch (err) {
+                document.getElementById('errMsg').innerText = 'Shida ya kuunganisha na Server!';
+            }
+        });
+    </script>
+</body>
+</html>

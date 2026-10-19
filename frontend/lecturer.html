@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTI SMIS - Lecturer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-12">
+
+<!-- NAVIGATION -->
+<nav class="bg-slate-950 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                    <span class="font-extrabold text-sm">BTI</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm md:text-base">BTI SMIS</h1>
+                    <p class="text-[10px] text-slate-400">Lecturer Portal</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:block text-right">
+                    <p id="navName" class="text-sm font-semibold">Lecturer</p>
+                    <p class="text-[11px] text-slate-400">Academic Staff</p>
+                </div>
+                <button onclick="logout()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg text-xs font-semibold transition">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- WELCOME HEADER -->
+    <section class="bg-gradient-to-r from-blue-700 to-blue-600 rounded-2xl p-6 md:p-8 text-white shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+            <div>
+                <p class="text-blue-100 text-sm mb-1">Welcome back</p>
+                <h2 id="lecName" class="text-2xl md:text-3xl font-extrabold">Lecturer</h2>
+                <p id="lecStaffId" class="text-blue-100 text-sm mt-2">Staff ID: -</p>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center">
+                <i class="fa-solid fa-chalkboard-user text-2xl"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Courses</p>
+                    <h3 id="statCourses" class="text-2xl font-extrabold mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Students</p>
+                    <h3 id="statStudents" class="text-2xl font-extrabold mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Pending Marks</p>
+                    <h3 id="statPending" class="text-2xl font-extrabold mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <i class="fa-solid fa-file-pen"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Submitted</p>
+                    <h3 id="statSubmitted" class="text-2xl font-extrabold mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+        <div class="p-5 md:p-6 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <h2 class="text-lg font-bold">My Courses</h2>
+                <p class="text-sm text-slate-500 mt-1">Courses assigned to you and their assessment records.</p>
+            </div>
+            <button onclick="openMarksModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition">
+                <i class="fa-solid fa-plus mr-1"></i> Enter Marks
+            </button>
+        </div>
+
+        <!-- Dynamic Container -->
+        <div id="coursesContainer" class="p-6">
+            <div class="text-center py-10">
+                <div class="mx-auto w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-book-open text-2xl text-slate-400"></i>
+                </div>
+                <h3 class="font-bold text-slate-700">No Courses Assigned</h3>
+                <p class="text-sm text-slate-500 max-w-md mx-auto mt-2">
+                    Courses assigned to your lecturer account will appear here.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section>
+        <h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+        <div class="grid md:grid-cols-3 gap-4">
+            <button onclick="openMarksModal()" class="bg-white border rounded-xl p-5 text-left hover:border-blue-400 hover:shadow-md transition">
+                <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <h3 class="font-bold">Enter Marks</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter and update student assessment marks.</p>
+            </button>
+
+            <button onclick="scrollToCourses()" class="bg-white border rounded-xl p-5 text-left hover:border-emerald-400 hover:shadow-md transition">
+                <div class="w-11 h-11 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h3 class="font-bold">View Courses</h3>
+                <p class="text-xs text-slate-500 mt-1">View modules assigned to your account.</p>
+            </button>
+
+            <button onclick="alert('Feature coming soon!')" class="bg-white border rounded-xl p-5 text-left hover:border-purple-400 hover:shadow-md transition">
+                <div class="w-11 h-11 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
+                <h3 class="font-bold">Reports</h3>
+                <p class="text-xs text-slate-500 mt-1">View academic and assessment reports.</p>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<!-- MODAL: ENTER MARKS -->
+<div id="marksModal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-slate-800">Submit Student Marks</h3>
+            <button onclick="closeMarksModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form id="marksForm" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Select Module</label>
+                <select id="modalModule" required class="w-full border p-2.5 rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                    <option value="">-- Select Module --</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Select Student</label>
+                <select id="modalStudent" required class="w-full border p-2.5 rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                    <option value="">-- Select Student --</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Coursework (Max 40)</label>
+                    <input type="number" id="modalCw" min="0" max="40" step="0.1" required class="w-full border p-2.5 rounded-lg text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Final Exam (Max 60)</label>
+                    <input type="number" id="modalExam" min="0" max="60" step="0.1" required class="w-full border p-2.5 rounded-lg text-xs">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t">
+                <button type="button" onclick="closeMarksModal()" class="px-4 py-2 bg-slate-200 text-xs rounded-lg font-bold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-xs rounded-lg font-bold hover:bg-blue-700">Submit Marks</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="max-w-7xl mx-auto px-6 py-6">
+    <div class="border-t border-slate-200 pt-5 text-center text-xs text-slate-400">
+        © 2026 BTI SMIS · Lecturer Portal
+    </div>
+</footer>
+
+<script>
+    const userData = localStorage.getItem('user');
+    let user = null;
+
+    try {
+        user = userData ? JSON.parse(userData) : null;
+    } catch (error) {
+        user = null;
+    }
+
+    if (!user || user.role !== 'LECTURER') {
+        window.location.href = 'index.html';
+    } else {
+        const name = user.name || 'Lecturer';
+        const username = user.username || '-';
+
+        document.getElementById('lecName').innerText = name;
+        document.getElementById('navName').innerText = name;
+        document.getElementById('lecStaffId').innerText = `Staff ID: ${username}`;
+    }
+
+    let assignedModules = [];
+
+    async function loadLecturerDashboard() {
+        try {
+            // Fetch assigned modules
+            const resMod = await fetch(`/api/lecturer/modules/${user.id}`);
+            assignedModules = await resMod.json();
+
+            // Update Stats
+            document.getElementById('statCourses').innerText = assignedModules.length;
+
+            const resStudents = await fetch('/api/academic/students');
+            const students = await resStudents.json();
+            document.getElementById('statStudents').innerText = students.length;
+
+            // Populate Courses Container
+            const container = document.getElementById('coursesContainer');
+            if (assignedModules.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10">
+                        <div class="mx-auto w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-book-open text-2xl text-slate-400"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-700">No Courses Assigned</h3>
+                        <p class="text-sm text-slate-500 max-w-md mx-auto mt-2">
+                            Contact Academic Officer to assign modules to your account.
+                        </p>
+                    </div>`;
+            } else {
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${assignedModules.map(m => `
+                            <div class="border rounded-xl p-4 bg-slate-50 hover:shadow-md transition space-y-2">
+                                <div class="flex justify-between items-start">
+                                    <span class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-mono font-bold">${m.code}</span>
+                                    <span class="text-[10px] text-slate-500 bg-white border px-2 py-0.5 rounded">${m.semester}</span>
+                                </div>
+                                <h3 class="font-bold text-slate-800 text-sm mt-1">${m.title}</h3>
+                                <p class="text-xs text-slate-500">${m.nta_level} (${m.academic_year})</p>
+                            </div>
+                        `).join('')}
+                    </div>`;
+            }
+
+            // Populate Modal Options
+            const moduleSelect = document.getElementById('modalModule');
+            moduleSelect.innerHTML = '<option value="">-- Select Module --</option>' +
+                assignedModules.map(m => `<option value="${m.id}">${m.code} - ${m.title}</option>`).join('');
+
+            const studentSelect = document.getElementById('modalStudent');
+            studentSelect.innerHTML = '<option value="">-- Select Student --</option>' +
+                students.map(s => `<option value="${s.id}">${s.name} (${s.username})</option>`).join('');
+
+        } catch (err) {
+            console.error('Failed to load dashboard data:', err);
+        }
+    }
+
+    function openMarksModal() {
+        document.getElementById('marksModal').classList.remove('hidden');
+    }
+
+    function closeMarksModal() {
+        document.getElementById('marksModal').classList.add('hidden');
+    }
+
+    document.getElementById('marksForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const moduleId = document.getElementById('modalModule').value;
+        const studentId = document.getElementById('modalStudent').value;
+        const coursework = parseFloat(document.getElementById('modalCw').value);
+        const finalExam = parseFloat(document.getElementById('modalExam').value);
+
+        const res = await fetch('/api/lecturer/submit-results', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ student_id: studentId, module_id: moduleId, coursework, final_exam: finalExam })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            alert('Marks submitted successfully!');
+            closeMarksModal();
+            loadLecturerDashboard();
+        } else {
+            alert(data.message || 'Error submitting marks!');
+        }
+    });
+
+    function scrollToCourses() {
+        document.getElementById('coursesContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    }
+
+    loadLecturerDashboard();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTI SMIS - Academic Office</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 font-sans pb-12">
+
+    <!-- TOP NAV -->
+    <nav class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-2 font-bold text-lg">
+            <i class="fa-solid fa-graduation-cap text-emerald-400"></i>
+            <span>BTI ACADEMIC OFFICER PANEL</span>
+        </div>
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded font-semibold transition">
+            Logout
+        </button>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
+        
+        <!-- SECTION 1: LECTURERS & MODULES -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- LECTURERS -->
+            <div class="bg-white p-5 rounded-xl border shadow-sm space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="font-bold text-slate-800"><i class="fa-solid fa-chalkboard-user text-emerald-600 mr-2"></i>Registered Lecturers</h2>
+                    <button onclick="toggleModal('lecturerModal', true)" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded font-bold hover:bg-emerald-700">
+                        + Add Lecturer
+                    </button>
+                </div>
+                <div class="max-h-60 overflow-y-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 font-bold text-slate-600">
+                            <tr>
+                                <th class="p-2">Staff ID</th>
+                                <th class="p-2">Full Name</th>
+                                <th class="p-2">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lecturerTableBody" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MODULE ASSIGNMENT -->
+            <div class="bg-white p-5 rounded-xl border shadow-sm space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="font-bold text-slate-800"><i class="fa-solid fa-book text-blue-600 mr-2"></i>Modules & Lecturer Assignment</h2>
+                    <button onclick="toggleModal('moduleModal', true)" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded font-bold hover:bg-blue-700">
+                        + Add Module
+                    </button>
+                </div>
+                <div class="max-h-60 overflow-y-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 font-bold text-slate-600">
+                            <tr>
+                                <th class="p-2">Code</th>
+                                <th class="p-2">Module Title</th>
+                                <th class="p-2">Semester</th>
+                                <th class="p-2">Lecturer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="moduleTableBody" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECTION 2: REGISTERED STUDENTS FROM REGISTRAR -->
+        <div class="bg-white p-5 rounded-xl border shadow-sm space-y-4">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-users text-purple-600 mr-2"></i>Students Registered by Registrar</h2>
+                <p class="text-xs text-slate-500">Categorized by NTA Level 4, Level 5, and Level 6.</p>
+            </div>
+
+            <div class="flex border-b space-x-2">
+                <button onclick="switchTab('NTA Level 4')" id="tab-lvl4" class="tab-btn px-4 py-2 text-xs font-bold border-b-2 border-emerald-600 text-emerald-600">NTA Level 4</button>
+                <button onclick="switchTab('NTA Level 5')" id="tab-lvl5" class="tab-btn px-4 py-2 text-xs font-bold text-slate-500 border-b-2 border-transparent">NTA Level 5</button>
+                <button onclick="switchTab('NTA Level 6')" id="tab-lvl6" class="tab-btn px-4 py-2 text-xs font-bold text-slate-500 border-b-2 border-transparent">NTA Level 6</button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="bg-slate-800 text-white text-xs uppercase font-bold">
+                            <th class="p-3">#</th>
+                            <th class="p-3">Reg No</th>
+                            <th class="p-3">Student Name</th>
+                            <th class="p-3">Email</th>
+                            <th class="p-3">Course</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody" class="divide-y text-slate-700"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 3: OVERALL SUBMITTED RESULTS -->
+        <div class="bg-white p-5 rounded-xl border shadow-sm space-y-4">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-file-invoice text-emerald-600 mr-2"></i>Overall Submitted Results</h2>
+                <p class="text-xs text-slate-500">Coursework and Final Exam results submitted directly by Lecturers.</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border">
+                    <thead class="bg-emerald-800 text-white text-xs font-bold uppercase">
+                        <tr>
+                            <th class="p-3">Student Name</th>
+                            <th class="p-3">Module</th>
+                            <th class="p-3">Semester</th>
+                            <th class="p-3 text-center">Coursework (40%)</th>
+                            <th class="p-3 text-center">Final Exam (60%)</th>
+                            <th class="p-3 text-center">Total (100%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody" class="divide-y text-xs font-semibold"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: ADD LECTURER -->
+    <div id="lecturerModal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="font-bold border-b pb-2">Add New Lecturer</h3>
+            <form id="addLecturerForm" class="space-y-3">
+                <input type="text" id="lecName" required placeholder="Full Name (e.g. Dr. John Doe)" class="w-full border p-2 rounded text-xs">
+                <input type="email" id="lecEmail" required placeholder="Email Address" class="w-full border p-2 rounded text-xs">
+                <input type="password" id="lecPassword" required placeholder="Password" class="w-full border p-2 rounded text-xs">
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="toggleModal('lecturerModal', false)" class="px-3 py-1.5 bg-slate-200 text-xs rounded">Cancel</button>
+                    <button type="submit" class="px-3 py-1.5 bg-emerald-600 text-white text-xs rounded font-bold">Save Lecturer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD MODULE WITH SEMESTER SELECTION -->
+    <div id="moduleModal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="font-bold border-b pb-2">Assign Module & Lecturer</h3>
+            <form id="addModuleForm" class="space-y-3">
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">NTA Level</label>
+                        <select id="modNta" onchange="updateDefaultSubjects()" class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="NTA Level 4">NTA Level 4</option>
+                            <option value="NTA Level 5">NTA Level 5</option>
+                            <option value="NTA Level 6">NTA Level 6</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Semester</label>
+                        <select id="modSemester" class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Academic Year</label>
+                    <select id="modAcademicYear" class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Select Module Title</label>
+                    <select id="modTitle" required class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600"></select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Module Code</label>
+                    <input type="text" id="modCode" required placeholder="e.g. BKT 04101" class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Assign Lecturer</label>
+                    <select id="modLecturer" class="w-full border p-2 rounded text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        <option value="">-- Select Lecturer --</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="toggleModal('moduleModal', false)" class="px-3 py-1.5 bg-slate-200 text-xs rounded">Cancel</button>
+                    <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded font-bold">Save Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let allStudents = [];
+        let activeTab = 'NTA Level 4';
+
+        const defaultSubjects = {
+            'NTA Level 4': ['Basic Communication Skills', 'Computer Applications', 'Basic Mathematics', 'Fundamentals of Bookkeeping', 'Principles of Commerce'],
+            'NTA Level 5': ['Database Management Systems', 'Web Development Technologies', 'Networking Fundamentals', 'Financial Accounting', 'Business Law'],
+            'NTA Level 6': ['Software Engineering Principles', 'System Analysis and Design', 'Advanced Cost Accounting', 'Entrepreneurship Skills', 'Final Year Project']
+        };
+
+        function updateDefaultSubjects() {
+            const selectedLevel = document.getElementById('modNta').value;
+            const titleSelect = document.getElementById('modTitle');
+            const subjects = defaultSubjects[selectedLevel] || [];
+            titleSelect.innerHTML = subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('');
+        }
+
+        async function initData() {
+            updateDefaultSubjects();
+            await loadLecturers();
+            await loadModules();
+            await loadStudents();
+            await loadResults();
+        }
+
+        async function loadLecturers() {
+            const res = await fetch('/api/lecturers');
+            const data = await res.json();
+            
+            document.getElementById('lecturerTableBody').innerHTML = data.map(l => `
+                <tr>
+                    <td class="p-2 font-mono font-bold text-emerald-700">${l.username}</td>
+                    <td class="p-2 font-semibold">${l.name}</td>
+                    <td class="p-2 text-slate-500">${l.email}</td>
+                </tr>
+            `).join('');
+
+            const select = document.getElementById('modLecturer');
+            select.innerHTML = '<option value="">-- Select Lecturer --</option>' + 
+                data.map(l => `<option value="${l.id}">${l.name} (${l.username})</option>`).join('');
+        }
+
+        async function loadModules() {
+            const res = await fetch('/api/academic/modules');
+            const data = await res.json();
+            document.getElementById('moduleTableBody').innerHTML = data.map(m => `
+                <tr>
+                    <td class="p-2 font-mono font-bold text-blue-700">${m.code}</td>
+                    <td class="p-2 font-semibold">${m.title}</td>
+                    <td class="p-2 text-slate-500">${m.semester} (${m.nta_level})</td>
+                    <td class="p-2 text-emerald-700 font-bold">${m.lecturer_name || 'Not Assigned'}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadStudents() {
+            const res = await fetch('/api/academic/students');
+            allStudents = await res.json();
+            renderStudents();
+        }
+
+        function renderStudents() {
+            const filtered = allStudents.filter(s => s.nta_level === activeTab);
+            const tbody = document.getElementById('studentTableBody');
+            
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">No students found for ${activeTab}.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((s, idx) => `
+                <tr>
+                    <td class="p-3 text-xs font-bold">${idx + 1}</td>
+                    <td class="p-3 font-mono text-xs font-bold text-purple-700">${s.username}</td>
+                    <td class="p-3 font-bold">${s.name}</td>
+                    <td class="p-3 text-xs font-mono">${s.email}</td>
+                    <td class="p-3 text-xs text-slate-600">${s.course}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadResults() {
+            const res = await fetch('/api/academic/results');
+            const data = await res.json();
+            const tbody = document.getElementById('resultsTableBody');
+
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No results submitted by lecturers yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(r => `
+                <tr>
+                    <td class="p-3 font-bold">${r.student_name} (${r.reg_no})</td>
+                    <td class="p-3">${r.module_title}</td>
+                    <td class="p-3 text-slate-500">${r.semester}</td>
+                    <td class="p-3 text-center">${r.coursework}</td>
+                    <td class="p-3 text-center">${r.final_exam}</td>
+                    <td class="p-3 text-center font-bold text-emerald-700">${r.total_marks}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(level) {
+            activeTab = level;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.replace('text-emerald-600', 'text-slate-500'));
+            renderStudents();
+        }
+
+        function toggleModal(id, show) {
+            document.getElementById(id).classList.toggle('hidden', !show);
+        }
+
+        document.getElementById('addLecturerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await fetch('/api/academic/add-lecturer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: document.getElementById('lecName').value,
+                    email: document.getElementById('lecEmail').value,
+                    password: document.getElementById('lecPassword').value
+                })
+            });
+            toggleModal('lecturerModal', false);
+            initData();
+        });
+
+        document.getElementById('addModuleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/academic/add-module', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: document.getElementById('modCode').value,
+                    title: document.getElementById('modTitle').value,
+                    nta_level: document.getElementById('modNta').value,
+                    semester: document.getElementById('modSemester').value,
+                    academic_year: document.getElementById('modAcademicYear').value,
+                    lecturer_id: document.getElementById('modLecturer').value
+                })
+            });
+
+            const data = await res.json();
+            if(!data.success) {
+                alert(data.message);
+                return;
+            }
+
+            toggleModal('moduleModal', false);
+            document.getElementById('modCode').value = '';
+            initData();
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        initData();
+    </script>
+</body>
+</html>
