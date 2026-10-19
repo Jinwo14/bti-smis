@@ -4,6 +4,6 @@
     "express": "^5.2.1",
     "nodemailer": "^10.0.10",
     "sqlite": "^5.1.1",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^5.1.7"
   }
 }
